@@ -1,7 +1,7 @@
-import java.io.*;
+package com;
+
 import java.util.Arrays;
 import java.util.*;
-import java.util.function.Predicate;
 
 /**
  * Система должна работать по следующему принципу.
@@ -28,7 +28,7 @@ import java.util.function.Predicate;
  * OK
  */
 public class Registration {
-    private static Set<String> dataBase = new HashSet<>();
+    private static Map<String, Integer> db = new HashMap<>();
     private static String template = "%s%d";
 
     public static void main(String[] args) {
@@ -44,21 +44,14 @@ public class Registration {
 
     private static void register(List<String> input) {
         input.forEach(e -> {
-            if (!dataBase.add(e)) {
-                addNewName(e,1);
+            if (db.containsKey(e)) {
+                int idx = db.get(e) + 1;
+                System.out.println(String.format(template, e, idx));
+                db.put(e, idx);
             } else {
+                db.put(e, 0);
                 System.out.println("OK");
             }
         });
     }
-
-    private static void addNewName(String name, int i){
-        String newName = String.format(template,name,i);
-        if(!dataBase.add(newName)){
-            addNewName(name,++i);
-        } else {
-            System.out.println(newName);
-        }
-    }
-
 }
