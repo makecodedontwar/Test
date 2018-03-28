@@ -1,5 +1,10 @@
 package com;
 
+import com.persistance.ConnectionFactory;
+import com.persistance.Database;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.*;
 
@@ -43,15 +48,13 @@ public class Registration {
     }
 
     private static void register(List<String> input) {
-        input.forEach(e -> {
-            if (db.containsKey(e)) {
-                int idx = db.get(e) + 1;
-                System.out.println(String.format(template, e, idx));
-                db.put(e, idx);
-            } else {
-                db.put(e, 0);
-                System.out.println("OK");
+        try (Connection connection = ConnectionFactory.getConnection()) {
+            Database db = new Database(connection);
+            for (String s : input) {
+                System.out.println(db.save(s));
             }
-        });
+        } catch (ClassNotFoundException | SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
